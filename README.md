@@ -1,59 +1,98 @@
-# analista-youtube
+🤖 YouTube Channel Manager Agent
+Agente inteligente desarrollado en TypeScript para la gestión automatizada de un canal de YouTube. Este sistema permite la programación, publicación, análisis y moderación de contenido mediante la integración con la API de YouTube y otras herramientas.
 
-An [VoltAgent](https://github.com/vercel/voltagent) application.
+🚀 Características principales
+📅 Programación automática de videos
 
-## Getting Started
+📝 Gestión de títulos, descripciones y etiquetas optimizadas para SEO
 
-### Prerequisites
+💬 Moderación automática de comentarios con reglas personalizables
 
-- Node.js (v18 or newer)
-- npm, yarn, or pnpm
+📊 Análisis de rendimiento de videos (views, likes, retención, etc.)
 
-### Installation
+📢 Notificaciones y alertas configurables por eventos
 
-1. Clone this repository
-2. Install dependencies
+🔄 Integración con herramientas externas (Google Drive, Notion, Discord, etc.)
 
-```bash
+🛠️ Tecnologías utilizadas
+TypeScript – Lenguaje principal
+
+Node.js – Entorno de ejecución
+
+YouTube Data API v3 – Acceso al canal y datos
+
+Express.js – API local para orquestación
+
+MongoDB / PostgreSQL (opcional) – Para almacenamiento persistente
+
+OAuth2.0 – Autenticación segura con cuentas de Google
+
+📦 Instalación
+bash
+Copiar
+Editar
+git clone https://github.com/tuusuario/youtube-agent.git
+cd youtube-agent
 npm install
-# or
-yarn
-# or
-pnpm install
-```
+⚙️ Configuración
+Crea un archivo .env en la raíz con las siguientes variables:
 
-### Development
+env
+Copiar
+Editar
+YOUTUBE_API_KEY=tu_api_key
+GOOGLE_CLIENT_ID=tu_client_id
+GOOGLE_CLIENT_SECRET=tu_client_secret
+REDIRECT_URI=http://localhost:3000/oauth2callback
+DB_URL=tu_url_de_base_de_datos
+Configura tus credenciales de OAuth2 desde la consola de Google Cloud.
 
-Run the development server:
+Ejecuta el proyecto:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+bash
+Copiar
+Editar
+npm run start
+🧠 Uso
+Puedes controlar el agente mediante endpoints REST o una interfaz de consola (CLI). Algunos comandos disponibles:
 
-## Features
+bash
+Copiar
+Editar
+# Subir un video programado
+npm run upload -- --file="video.mp4" --title="Mi nuevo video" --publishAt="2025-06-08T10:00:00Z"
 
-This project uses VoltAgent, a framework for building AI agents with the following capabilities:
+# Obtener estadísticas del canal
+npm run stats
 
-- **Core** - The foundation for building and running AI agents
-- **Vercel AI Provider** - Integration with Vercel AI SDK for LLM access
-- **Custom Tools** - Add your own capabilities for your agents
+# Revisar y moderar comentarios
+npm run moderate
+🧪 Tests
+bash
+Copiar
+Editar
+npm run test
+📂 Estructura del proyecto
+arduino
+Copiar
+Editar
+src/
+├── agents/
+│   └── youtubeAgent.ts
+├── api/
+│   └── routes.ts
+├── services/
+│   ├── videoManager.ts
+│   ├── analytics.ts
+│   └── commentModerator.ts
+├── utils/
+├── config/
+└── index.ts
+🔐 Seguridad
+Este proyecto utiliza OAuth 2.0 para autenticación y no almacena directamente contraseñas ni tokens sensibles. Asegúrate de manejar correctamente tus credenciales y tokens.
 
-## Project Structure
+📄 Licencia
+MIT License. Puedes usar y modificar este proyecto libremente con atribución.
 
-```
-.
-├── src/
-│   └── index.ts       # Main application entry point with agent definition
-├── .voltagent/        # Auto-generated folder for agent memory
-├── package.json
-├── tsconfig.json
-└── README.md
-```
-
-## License
-
-MIT 
+🤝 Contribuciones
+¡Las contribuciones son bienvenidas! Si deseas mejorar el agente o agregar nuevas funciones, abre un issue o un pull request.
