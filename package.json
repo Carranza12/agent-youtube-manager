@@ -21,11 +21,12 @@
     "@voltagent/core": "^0.1.30",
     "@voltagent/vercel-ai": "^0.1.9",
     "dotenv": "^16.5.0",
+    "firebase-admin": "^13.4.0",
     "googleapis": "^150.0.1",
     "zod": "3.24.2"
   },
   "devDependencies": {
-    "@types/node": "^22.13.5",
+    "@types/node": "^22.15.30",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2"
   }

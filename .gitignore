@@ -30,6 +30,9 @@ lerna-debug.log*
 *.tsbuildinfo
 .cache
 
+#Database
+./service_account_firebase.json
+
 # Editor directories and files
 .idea
 .vscode/*

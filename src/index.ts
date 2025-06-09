@@ -12,14 +12,17 @@ import { searchVideoByTitleTool } from "./tools/searchVideoByTitle.js";
 import { fetchVideoStatsTool } from "./tools/fetchVideoStats.js";
 import * as dotenv from "dotenv";
 import { fetchTopVideosTool } from "./tools/fetchTopVideosByViews.js";
+import { FirebaseMemory } from "./adapters/firebase.memory.js";
 dotenv.config();
 const publicKey = process.env.VOLTAGENT_PUBLIC_KEY || "";
 const secretKey = process.env.VOLTAGENT_SECRET_KEY || "";
 
-const memory = new InMemoryStorage({
+/* const memory = new InMemoryStorage({
   storageLimit: 100,
   debug: true,
-});
+}); */
+
+const firebaseMemory = new FirebaseMemory();
 const agent = new Agent({
   name: "analista-youtube",
   instructions: `Eres un asesor experto en análisis de canales de YouTube. 
@@ -98,25 +101,26 @@ recuerda que puedes combinar herramientas, por ejemplo si te piden estadisticas 
 Siempre analiza los datos obtenidos para dar recomendaciones prácticas y amigables que ayuden al creador a mejorar su contenido.
 No inventes datos, y responde solo una vez que hayas usado las herramientas necesarias.
 `,
-
   purpose:
     "Ayudar a creadores de contenido de YouTube a optimizar sus videos y estrategias de crecimiento mediante análisis de datos y recomendaciones generadas con IA.",
   llm: new VercelAIProvider(),
   model: openai("gpt-4o-mini"),
-  tools: [fetchLatestVideoTool, searchVideoByTitleTool, fetchVideoStatsTool, fetchTopVideosTool],
-  memory,
-  userId: "user-123",
-  conversationId: "chat-session-xyz",
-  
+  tools: [
+    fetchLatestVideoTool,
+    searchVideoByTitleTool,
+    fetchVideoStatsTool,
+    fetchTopVideosTool,
+  ],
+  memory: firebaseMemory,
 });
 
-telemetryExporter: new VoltAgentExporter({
-  publicKey: publicKey,
-  secretKey: secretKey,
-  baseUrl: "https://api.voltagent.dev",
-}),
-  new VoltAgent({
-    agents: {
-      agent,
-    },
-  });
+new VoltAgent({
+  agents: {
+    agent,
+  },
+ /*  telemetryExporter: new VoltAgentExporter({
+    publicKey: publicKey,
+    secretKey: secretKey,
+    baseUrl: "https://api.voltagent.dev",
+  }), */
+});
