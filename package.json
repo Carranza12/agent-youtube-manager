@@ -11,7 +11,8 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "dev": "tsx watch --env-file=.env ./src ",
+    "dev:agent": "tsx watch --env-file=.env ./src ",
+    "dev:api": "tsx src/api/server.ts",
     "start": "node dist/index.js",
     "volt": "volt"
   },
@@ -20,14 +21,20 @@
     "@voltagent/cli": "^0.1.6",
     "@voltagent/core": "^0.1.30",
     "@voltagent/vercel-ai": "^0.1.9",
+    "cors": "^2.8.5",
     "dotenv": "^16.5.0",
+    "express": "^5.1.0",
     "firebase-admin": "^13.4.0",
     "googleapis": "^150.0.1",
     "zod": "3.24.2"
   },
   "devDependencies": {
-    "@types/node": "^22.15.30",
-    "tsx": "^4.19.3",
-    "typescript": "^5.8.2"
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/node": "^22.15.31",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.20.0",
+    "typescript": "^5.8.3"
   }
 }
