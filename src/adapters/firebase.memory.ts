@@ -9,20 +9,26 @@ import {
   BaseMessage,
   NewTimelineEvent,
 } from "@voltagent/core";
-
-
-
-export interface MessageCollection {
-  id?: string;
+interface FirebaseMessageData {
+  role: string;
+  type: string;
+  content: string;
+  createdAt: number;
+  updateAt: number;
   userId: string;
   conversationId: string;
-  sender: "agent" | "user";
-  type: "text" | "image" | "form" | "video" | "audio" | "graph";
-  content: string;
-  details?: Record<string, any>;
-  createdAt: number;
+  metatdata: FirebaseMetadataMessage;
 }
 
+export interface FirebaseMetadataMessage {
+  sender: string;
+  type: string;
+}
+
+interface DocumentSnapshot {
+  id: string;
+  data(): FirebaseMessageData;
+}
 export class FirebaseMemory implements Memory {
   async addMessage(
     message: BaseMessage,
@@ -35,12 +41,11 @@ export class FirebaseMemory implements Memory {
       userId,
       conversationId,
       metadata: {
-      type: "text",
-      sender: message.role === "user" ? "user" : "agent",
+        type: "text",
+        sender: message.role === "user" ? "user" : "agent",
+      },
       createdAt: new Date().getTime(),
       updateAt: new Date().getTime(),
-      }
-      
     };
     const docRef = await db.collection("messages").add(messageData);
 
@@ -55,55 +60,37 @@ export class FirebaseMemory implements Memory {
   }
 
   async getMessages(options: MessageFilterOptions): Promise<MemoryMessage[]> {
-    const { userId, conversationId, limit = 20, before, after, role } = options;
-
-    let query: any = db.collection("messages");
-
-    if (userId) {
-      query = query.where("userId", "==", userId);
+    try {
+      const { userId, conversationId, limit } = options;
+      let query: any = db.collection("messages");
+      if (userId) {
+        query = query.where("userId", "==", userId);
+      }
+      if (conversationId) {
+        query = query.where("conversationId", "==", conversationId);
+      }
+      query = query.orderBy("createdAt", "desc").limit(limit);
+      const snapshot = await query.get();
+      const messages = snapshot.docs
+        .reverse()
+        .map((doc: DocumentSnapshot): MemoryMessage => {
+          const data: FirebaseMessageData = doc.data() as FirebaseMessageData;
+          return {
+            id: doc.id,
+            role: data.role,
+            type: data.type ?? "text",
+            content: data.content,
+            createdAt: data.createdAt
+              ? new Date(data.createdAt).toISOString()
+              : new Date().toISOString(),
+          } as MemoryMessage;
+        });
+      console.log("messages:", messages);
+      return messages;
+    } catch (error) {
+      console.log("error__", error);
+      return [];
     }
-    if (conversationId) {
-      query = query.where("conversationId", "==", conversationId);
-    }
-    if (role) {
-      query = query.where("role", "==", role);
-    }
-    if (before) {
-      query = query.where("createdAt", "<", new Date(before));
-    }
-    if (after) {
-      query = query.where("createdAt", ">", new Date(after));
-    }
-
-    query = query.orderBy("createdAt", "desc").limit(limit);
-
-    const snapshot = await query.get();
-
-    interface FirebaseMessageData {
-      role: string;
-      type: string;
-      content: string;
-      createdAt: Timestamp;
-    }
-
-    interface DocumentSnapshot {
-      id: string;
-      data(): FirebaseMessageData | undefined;
-    }
-
-    return snapshot.docs
-      .reverse()
-      .map((doc: DocumentSnapshot): MemoryMessage => {
-        const data: FirebaseMessageData = doc.data() as FirebaseMessageData;
-        return {
-          id: doc.id,
-          role: data.role,
-          type: data.type ?? "text",
-          content: data.content,
-          createdAt:
-            data.createdAt?.toDate().toISOString() ?? new Date().toISOString(),
-        } as MemoryMessage;
-      });
   }
 
   async clearMessages(options: {

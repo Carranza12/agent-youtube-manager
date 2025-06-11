@@ -16,11 +16,7 @@ import { FirebaseMemory } from "./adapters/firebase.memory.js";
 dotenv.config();
 const publicKey = process.env.VOLTAGENT_PUBLIC_KEY || "";
 const secretKey = process.env.VOLTAGENT_SECRET_KEY || "";
-
-/* const memory = new InMemoryStorage({
-  storageLimit: 100,
-  debug: true,
-}); */
+const youtubeChannelId = process.env.YOUTUBE_CHANNEL_ID || "";
 
 const firebaseMemory = new FirebaseMemory();
 const agent = new Agent({
@@ -28,7 +24,7 @@ const agent = new Agent({
   instructions: `Eres un asesor experto en análisis de canales de YouTube. 
 Puedes entender preguntas naturales del usuario como "¿qué tal va mi último video?" o "¿qué comentarios tiene el video que subí sobre crear agentes de inteligencia artificial?".
 
-Tienes acceso a herramientas que te permiten buscar videos y consultar sus estadísticas reales usa el channelId de "UCBUjTIjWi8GRyDIKKaHtR2w". 
+Tienes acceso a herramientas que te permiten buscar videos y consultar sus estadísticas reales usa el channelId de "${youtubeChannelId}". 
 Usa la herramienta correspondiente según el caso:
 
 - Si el usuario menciona "último video", usa "fetchLatestVideo" pasandole el channelId como argumento

@@ -62,7 +62,6 @@ export const fetchLatestVideoTool = createTool({
         part: ["snippet"],
         maxResults: 10,
       });
-      console.log("__commentsResponse__", commentsResponse);
       const comments: Comment[] =
         commentsResponse.data.items?.map((item) => ({
           author:
